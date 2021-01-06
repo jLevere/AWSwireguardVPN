@@ -1,8 +1,8 @@
-#WireGuard AWS Lightsail relay setup and configuration. 
+# WireGuard AWS Lightsail relay setup and configuration. 
 
-######################################################################
+This is a walk through of my Ubuntu AWS Lightsail instance that runs a WireGuard VPN relay.  The goal of this project was two fold. First to be able to easily access distributed devices behind NAT and firewalls that I may not control.  And second, to encrypt traffic on potentially malicius or insecure networks. 
 
-created lightsail ubuntu 20.04 instance and set up access with a new named key. 
+Created lightsail ubuntu 20.04 instance and set up access with a new named key. 
 chose the lowest priced instance
 removed all the current firewall rules
 added firewall rule for ssh, allowed lightsail console access, and using "google what is my ip" added a ip resictiction for ssh connections.
@@ -102,10 +102,7 @@ you can query the host name and other general information with the command
 hostnamectl
 ```
 
-
-############################33
-
-Next we are going to set up the firewall iptables
+## Next we are going to set up the firewall iptables 
 
 we are going to set up the input rules first, or the chain that controls what things can make connections into the 
 machine from the outside. 
@@ -133,12 +130,12 @@ sudo iptables -A INPUT -i lo -j ACCEPT	# accept localhost
 next we are going to allow ssh from anywhere.  The AWS firewall will help protect the machine from too much random traffic.
 ```
 sudo iptables -A INPUT -i eth0 -p tcp -m state --state NEW,ESTABLISHED -m tcp --dport 22 -j ACCEPT # accept incoming ssh from anywhere
-``
+```
 then we are going to allow from anywhere connections to the port we are going to use for the vpn wireguard.  You can use any high udp port, I just picked 51802
 ```
 sudo iptables -A INPUT -i eth0 -p udp -m state --state NEW,ESTABLISHED -m udp --dport 51802 -j ACCEPT 	# accept incoming wireguard from anywhere
 ```
- next we are going to allow icmp ping traffic from the internal subnet we will asign to our vpn network.  I am using 10.1.0.0/24 for mine.
+next we are going to allow icmp ping traffic from the internal subnet we will asign to our vpn network.  I am using 10.1.0.0/24 for mine.
 #sudo iptables -A INPUT -i wg0 -p icmp --icmp-type echo-request -j ACCEPT 	# accept pings from wg0 network (move this to the wg0.conf file)
 and lastly we are going to set a rule to drop anything that doest match the rules above.  
 ```
