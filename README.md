@@ -14,7 +14,7 @@ added firewall rule for ssh, allowed lightsail console access, and using "Google
 I am using windows subsystem for Linux 2 for all of my local work as I am most comfortable using bash for things. 
 
 - Take the downloaded private key from creating the lightsail instance and move it into the .ssh directory in WSL 
-{user}@{WSL}:~$ `rsync /mnt/c/users/{home}/downloads/{keyName}.pem ~/.ssh` 
+{user}@{WSL}:\~$ `rsync /mnt/c/users/{home}/downloads/{keyName}.pem ~/.ssh` 
 {user}@{WSL}:~/.ssh$ `chmod 600 {keyName}.pem`
 
 
