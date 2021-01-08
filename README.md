@@ -1,20 +1,33 @@
 # WireGuard AWS Lightsail relay setup and configuration. 
 
-This is a walk through of my Ubuntu AWS Lightsail instance that runs a WireGuard VPN relay.  
+The goal of this project was three fold. First to allow distributed devices behind NAT and firewalls that I do not control to access each other.  Second, to encrypt traffic on potentially malicious or insecure networks.  And third, to do the above in an inexpensive and streamlined manner.  
 
-The goal of this project was three fold. First to be able to easily access distributed devices behind NAT and firewalls that I may not control.  Second, to encrypt traffic on potentially malicious or insecure networks.  And third, to do the above in an inexpensive and streamlined manner. 
+To do this, I am using a small AWS LightSail Ubuntu instance as a relay node.  Devices use the VPN protocol WireGuard to connect up to the publicly accessible instance which forwards traffic between the different connections as well as the internet. While this may have more lag than a direct peer to peer connection, it has the advantage of working with most NAT configurations and many firewalls.  
 
+I chose WireGuard for its ease of implementation, multi-platform support, peer structure, small overhead and security. I also have been itching to find a use for it for a while now, so there is that too.
 
+This is a setup guide for my Ubuntu AWS Lightsail instance that runs a WireGuard VPN relay.  I also cover connecting devices to it at the end. 
 
-Created lightsail ubuntu 20.04 instance and set up access with a new named key. 
-chose the lowest priced instance
-removed all the current firewall rules
-added firewall rule for ssh, allowed lightsail console access, and using "Google what is my ip" added a ip restriction for ssh connections.
+While it can be difficult to find understandable information about the WireGuard configurations online, the man files are excellent recourses and have helpful examples. 
 
+## Setting up AWS
+After creating an Amazon aws account, go to the lightsail home. 
+Chose `create instance`
+Then down the page I am using:
+- Linux
+- Ubuntu 20.04 LTS
+- Added an ssh key and downloaded it
+- The 3.5usd per month instance plan
+- Named the instance
+- And created the instance. 
+After lettings it spin up, select the instance and go into the networking settings. 
+Remove all the current firewall rules and add rule for the application ssh.  Allow access by lightsail web-console and restrict it to your public ip. To ensure that I have the right public ip I just Googled `what is my ip` just in case there is some kind of address mapping going on.  
+I am also going to go ahead and add
 I am using windows subsystem for Linux 2 for all of my local work as I am most comfortable using bash for things. 
 
 - Take the downloaded private key from creating the lightsail instance and move it into the .ssh directory in WSL 
 {user}@{WSL}:\~$ `rsync /mnt/c/users/{home}/downloads/{keyName}.pem ~/.ssh` 
+- set the perms for the key so it cant be read and ssh allows it.
 {user}@{WSL}:~/.ssh$ `chmod 600 {keyName}.pem`
 
 
@@ -159,7 +172,6 @@ Next we are going to allow icmp ping traffic from the internal subnet we will as
 ```
 sudo iptables -A INPUT -i wg0 -p icmp --icmp-type echo-request -j ACCEPT
 ```
-# accept pings from wg0 network (move this to the wg0.conf file)
 
 And lastly we are going to set a rule to drop anything that doest match the rules above.
 - enter the command
@@ -395,3 +407,19 @@ There a few other commands for status info, but without arguments it defaults to
 In the app start the tunnel!
 
 You can watch the logs on the phone to see what is happening and if it is connected.
+
+
+## End notes
+
+And that is pretty much it.  I have had my instances online for a few months now and they are still stable and forwarding.  There are alot of things in the set up that can be scripted, particularly the writing of the WireGuard config files.
+
+The next thing I am looking at is implementing some webRTC like STUN system to attempt and form direct peer to peer connections between devices when possible to reduce both latency and traffic in general on the AWS instance.  If the connections are not possible then it falls back to a forwarded connection.
+
+This project was largely inspired by {TailScale}(https://github.com/tailscale/tailscale) which I have been enamored with since I first used it.  This set up replicates pieces of the TailScale network but without as many restrictions or 2fa. 
+
+Several sources that I found helpful in this project were: 
+[Unofficial WireGuard Doc] (https://github.com/pirate/wireguard-docs)
+[WireGuard routing](https://www.wireguard.com/netns/)
+[WireGuard setup](https://www.wireguard.com/quickstart/)
+[Iptables Tricks](https://opensource.com/article/18/10/iptables-tips-and-tricks)
+[Mullvad Raspberry pi wireguard setup](https://mullvad.net/en/help/wireguard-and-mullvad-vpn/)
