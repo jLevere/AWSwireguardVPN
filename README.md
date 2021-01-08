@@ -415,7 +415,7 @@ And that is pretty much it.  I have had my instances online for a few months now
 
 The next thing I am looking at is implementing some webRTC like STUN system to attempt and form direct peer to peer connections between devices when possible to reduce both latency and traffic in general on the AWS instance.  If the connections are not possible then it falls back to a forwarded connection.
 
-This project was largely inspired by **[TailScale]**(https://github.com/tailscale/tailscale) which I have been enamored with since I first used it.  This set up replicates pieces of the TailScale network but without as many restrictions or 2fa. 
+This project was largely inspired by [TailScale](https://github.com/tailscale/tailscale) which I have been enamored with since I first used it.  This set up replicates pieces of the TailScale network but without as many restrictions or 2fa. 
 
 Several sources that I found helpful in this project were:
 
