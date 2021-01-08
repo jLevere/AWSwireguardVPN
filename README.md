@@ -417,7 +417,8 @@ The next thing I am looking at is implementing some webRTC like STUN system to a
 
 This project was largely inspired by **[TailScale]**(https://github.com/tailscale/tailscale) which I have been enamored with since I first used it.  This set up replicates pieces of the TailScale network but without as many restrictions or 2fa. 
 
-Several sources that I found helpful in this project were: 
+Several sources that I found helpful in this project were:
+
 [Unofficial WireGuard Doc](https://github.com/pirate/wireguard-docs)
 
 [WireGuard routing](https://www.wireguard.com/netns/)
@@ -427,3 +428,4 @@ Several sources that I found helpful in this project were:
 [Iptables Tricks](https://opensource.com/article/18/10/iptables-tips-and-tricks)
 
 [Mullvad Raspberry pi wireguard setup](https://mullvad.net/en/help/wireguard-and-mullvad-vpn/)
+
