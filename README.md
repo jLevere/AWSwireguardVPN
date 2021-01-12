@@ -116,11 +116,11 @@ I am also going to change my hostname to something other than the interal ip add
 
 - set this value to whatever you want to call your machine.  I am using `relay`
 ```
-sudo nano /etc/hostname
+sudo hostnamectl set-hostname relay
 ```
 - also check here and make sure it matches your new hostname
 ```
-sudo nano /etc/hosts
+sudo cat /etc/hosts
 ```
 
 Then reboot for the change to take effect
@@ -401,6 +401,12 @@ You can check the status of wireguard with this command
 sudo wg
 ```
 There a few other commands for status info, but without arguments it defaults to show everything.
+
+If you like you can also have wireguard setup the interface on boot with
+```
+sudo systemctl enable wg-quick@wg0
+```
+
 
 ## Now lets try to connect with the phone
 
