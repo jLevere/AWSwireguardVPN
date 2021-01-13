@@ -22,7 +22,7 @@ Then down the page I am using:
 - And created the instance. 
 
 After lettings it spin up, select the instance and go into the networking settings. 
-Remove all the current firewall rules and add rule for the application ssh.  Allow access by lightsail web-console and restrict it to your public ip. To ensure that I have the right public ip I just Googled `what is my ip` just in case there is some kind of address mapping going on.  
+Remove all the current firewall rules and add rule for the application ssh.  Allow access by lightsail web-console and restrict it to your public ip. To ensure that I have the right public ip I just ran `curl http://www.icanhazip.com` just in case there is some kind of address mapping going on.  
 
 I am using windows subsystem for Linux 2 for all of my local work as I am most comfortable using bash for things. 
 
