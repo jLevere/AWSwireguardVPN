@@ -1,10 +1,10 @@
 # WireGuard AWS Lightsail relay setup and configuration. 
 
-The goal of this project was three fold. First to allow distributed devices behind NAT and firewalls that I do not control to access each other.  Second, to encrypt traffic on potentially malicious or insecure networks.  And third, to do the above in an inexpensive and streamlined manner.  
+The goals of this project were three fold. First to allow distributed devices behind NAT and firewalls that I do not control to access each other.  Second, to encrypt traffic on potentially malicious or insecure networks.  And third, to do the above in an inexpensive and streamlined manner.  
 
-To do this, I am using a small AWS LightSail Ubuntu instance as a relay node.  Devices use the VPN protocol WireGuard to connect up to the publicly accessible instance which forwards traffic between the different connections as well as the internet. While this may have more lag than a direct peer to peer connection, it has the advantage of working with most NAT configurations and many firewalls.  
+To do this, I am using a small AWS LightSail Ubuntu instance as a relay node.  Devices use the VPN protocol WireGuard to connect up to the publicly accessible instance in AWS which forwards traffic between the different connections as well as the internet. While this may have more lag than a direct peer to peer connection, it has the advantage of working with most NAT implementations and many firewall configurations as well.  
 
-I chose WireGuard for its ease of implementation, multi-platform support, peer structure, small overhead and security. I also have been itching to find a use for it for a while now, so there is that too.
+I chose WireGuard for its ease of implementation, multi-platform support, peer structure, small overhead, and security.  I have been itching to find a use for protocol for a while now, so there is that too.
 
 This is a setup guide for my Ubuntu AWS Lightsail instance that runs a WireGuard VPN relay.  I also cover connecting devices to it at the end. 
 
@@ -20,18 +20,19 @@ Then down the page I am using:
 - The 3.5usd per month instance plan
 - Named the instance
 - And created the instance. 
+
 After lettings it spin up, select the instance and go into the networking settings. 
 Remove all the current firewall rules and add rule for the application ssh.  Allow access by lightsail web-console and restrict it to your public ip. To ensure that I have the right public ip I just Googled `what is my ip` just in case there is some kind of address mapping going on.  
-I am also going to go ahead and add
+
 I am using windows subsystem for Linux 2 for all of my local work as I am most comfortable using bash for things. 
 
 - Take the downloaded private key from creating the lightsail instance and move it into the .ssh directory in WSL 
 {user}@{WSL}:\~$ `rsync /mnt/c/users/{home}/downloads/{keyName}.pem ~/.ssh` 
-- set the perms for the key so it cant be read and ssh allows it.
+- Set the perms for the key so it cant be read and ssh allows it
 {user}@{WSL}:~/.ssh$ `chmod 600 {keyName}.pem`
 
 
-Going back to lightsail, we are going to assign a static public ip to our ubuntu instance
+Going back to lightsail, we are going to assign a static public ip to our ubuntu instance.
 
 - Make sure that our ssh-agent is running
 {user}@{WSL}:~$ `eval "$(ssh-agent)"'`
@@ -96,13 +97,13 @@ sudo nano /etc/ssh/sshd_config
 
 
 
-- set `PermitRootLogin` to `no`  *you can use ctl-w (where is) to search for the entry*
+- Set `PermitRootLogin` to `no`  *you can use ctl-w (where is) to search for the entry*
 > PermitRootLogin no
 
-And add this line to the end of the file with the names of the users you want to be able to use ssh to login.  I have removed the default ubuntu and put my new user level in its place. 
-> AllowUsers level
+And add this line to the end of the file with the names of the users you want to be able to use ssh to login.  I have removed the default `ubuntu` and put my new user `level` in its place. 
+> AllowUsers `level`
 
-Save the file with ctl s then close with ctl x. 
+Save the file with <kbd>ctl</kbd> <kbd>s</kbd> then close with <kbd>ctl</kbd> <kbd>x</kbd>. 
 
 
 - Restart the service for the config to take effect
@@ -168,7 +169,7 @@ Then we are going to allow, from anywhere, connections to the port we are going 
 sudo iptables -A INPUT -i eth0 -p udp -m state --state NEW,ESTABLISHED -m udp --dport 62013 -j ACCEPT 
 ```
 
-Next we are going to allow icmp ping traffic from the internal subnet we will assign to our vpn network.  I am using 10.1.0.0/24 for my internal network.  We will set this subnet up later in wireguard interface configuration.
+Next we are going to allow icmp ping traffic from the vpn interface which I call wg0.  We will set this up later. 
 ```
 sudo iptables -A INPUT -i wg0 -p icmp --icmp-type echo-request -j ACCEPT
 ```
@@ -328,7 +329,7 @@ The config looks very similar but we are going to add a little more info to it. 
 
 	# the private key for the client to use
 	PrivateKey = (hidden)
-	```
+	
 
 then the peer, which from the client perspective is the relay
 
