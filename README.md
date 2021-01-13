@@ -97,7 +97,7 @@ sudo nano /etc/ssh/sshd_config
 
 
 
-- Set `PermitRootLogin` to `no`  *you can use ctl-w (where is) to search for the entry*
+- Set `PermitRootLogin` to `no`  *you can use <kbd>ctl</kbd> <kbd>w</kbd> (where is) to search for the entry*
 > PermitRootLogin no
 
 And add this line to the end of the file with the names of the users you want to be able to use ssh to login.  I have removed the default `ubuntu` and put my new user `level` in its place. 
@@ -177,11 +177,11 @@ sudo iptables -A INPUT -i wg0 -p icmp --icmp-type echo-request -j ACCEPT
 And lastly we are going to set a rule to drop anything that doest match the rules above.
 - enter the command
 ```
-sudo iptables -A INPUT -j DROPrules
+sudo iptables -A INPUT -j DROP
 ```
 *I use drop rules rather than drop defaults so that I dont lock myself out as easily.*
 
-Iptables rules are deleted on reboot so we need to install something to make them persist.  I am using the normal netfilter-persistent with the iptables plug-in. 
+Iptables rules are deleted on reboot so we need to install something to make them persist.  I am using netfilter-persistent with the iptables plug-in. 
 - install netfilter-persistent
 ```
 sudo apt install netfilter-persistent
@@ -201,7 +201,7 @@ sudo systemctl enable netfilter-persistent
 sudo netfilter-persistent save
 ```
 
-Although this might seem kinda tedious having to save the rules manually, the advantage is that if you change a rule and lock yourself out, you can just power the machine off and it will revert back the the rules that you were using last.  I have managed this several times playing around, so it does happen. 
+Although this might seem kinda tedious having to save the rules manually, the advantage is that if you change a rule and lock yourself out, you can just power the machine down and it will revert back the the rules that you were using last.  This being perticularly important with remote machines.  I have managed this several times playing around, so it does happen. 
 
 I also like to add just a general ipv6 drop rule to my firewall as I dont use it internally anywhere. ipv6 is handled by a different program called, somewhat unsurprisingly, ip6tables.  It uses the same syntax and netfilter saves it so its not really that much different.
 ```
@@ -265,7 +265,7 @@ Lets start with the relays config.
 sudo nano /etc/wireguard/wg0.conf
 ```
 
-The name of the config file is the name of the interface.  This is the config that I am using. Feel free to modify it for your needs, its quite flexable. 
+The name of the config file is the name of the interface.  This is the config that I am using. Feel free to modify it for your needs, its quite flexable.  I am using the 10.1.0.0/24 subnet for my network, but this is completely arbitrary.  You can make yours any private ip range you feel like.  Just beware that it is best if it doesnt conflict with some of the LANs your devices may be connected to. 
 
 This block is for the relay side of the tunnels
 ```
@@ -311,7 +311,7 @@ This block is for the relay side of the tunnels
 ```
 
 
-And that is all for the relay config file  save it with ctrl s, ctrl x
+And that is all for the relay config file  save it with <kbd>ctrl</kbd> <kbd>s</kbd>, <kbd>ctrl</kbd> <kbd>x</kbd>
 
 Then we need to make similar config files that will be passed to client (or peer in wireguard terms) devices.
 
@@ -331,7 +331,7 @@ The config looks very similar but we are going to add a little more info to it. 
 	PrivateKey = (hidden)
 	
 
-then the peer, which from the client perspective is the relay
+# then the peer, which from the client perspective is the relay
 
 [Peer]
 	# the public key of the relay
@@ -365,7 +365,7 @@ qrencode -o wg/clients/phone.png -t png < wg/clients/phone.conf
 Once the config files are ready to go, we need to get them to the devices.  I am using scp to copy them onto my local machine and then display the qr code 
 for the phone, and load the laptop one into the wireguard software.
 
-scp has the syntax: `scp sourceDomain:sourceFile destFile`  And uses ssh for the connection so make sure you keys is loaded up on your local machine.
+scp has the syntax: `scp sourceDomain:sourceFile destFile`  And uses ssh for the connection so make sure you key is loaded up on your local machine for AWS.
 
 - on your local machine execute
 ```
