@@ -4,7 +4,7 @@ The goals of this project were three fold. First to allow distributed devices be
 
 To do this, I am using a small AWS LightSail Ubuntu instance as a relay node.  Devices use the VPN protocol WireGuard to connect up to the publicly accessible instance in AWS which forwards traffic between the different connections as well as the internet. While this may have more lag than a direct peer to peer connection, it has the advantage of working with most NAT implementations and many firewall configurations as well.  
 
-I chose WireGuard for its ease of implementation, multi-platform support, peer structure, small overhead, and security.  I have been itching to find a use for protocol for a while now, so there is that too.
+I chose WireGuard for its ease of implementation, multi-platform support, peer structure, small overhead, and security.  I have been itching to find a use for the protocol for a while now, so there is that too.
 
 This is a setup guide for my Ubuntu AWS Lightsail instance that runs a WireGuard VPN relay.  I also cover connecting devices to it at the end. 
 
