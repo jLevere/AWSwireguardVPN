@@ -103,7 +103,7 @@ sudo nano /etc/ssh/sshd_config
 And add this line to the end of the file with the names of the users you want to be able to use ssh to login.  I have removed the default `ubuntu` and put my new user `level` in its place. 
 > AllowUsers `level`
 
-Save the file with <kbd>ctl</kbd> <kbd>s</kbd> then close with <kbd>ctl</kbd> <kbd>x</kbd>. 
+Save the file with <kbd>ctl</kbd> <kbd>s</kbd> then close with <kbd>ctl</kbd> <kbd>x</kbd> 
 
 
 - Restart the service for the config to take effect
