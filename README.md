@@ -160,7 +160,7 @@ sudo iptables -A INPUT -i lo -j ACCEPT
 Next we are going to allow ssh from anywhere.  The AWS firewall will help protect the machine from too much random traffic.
 - enter the command
 ```
-sudo iptables -A INPUT -i eth0 -p tcp -m state --state NEW,ESTABLISHED -m tcp --dport 22 -j ACCEPT # accept incoming ssh from anywhere
+sudo iptables -A INPUT -i eth0 -p tcp -m state --state NEW,ESTABLISHED -m tcp --dport 22 -j ACCEPT
 ```
 
 Then we are going to allow, from anywhere, connections to the port we are going to use for the vpn wireguard.  You can use any high udp port, I just picked 62013
