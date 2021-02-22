@@ -1,14 +1,17 @@
 # WireGuard AWS Lightsail relay setup and configuration. 
 
-The goals of this project were three fold. First to allow distributed devices behind NAT and firewalls that I do not control to access each other.  Second, to encrypt traffic on potentially malicious or insecure networks.  And third, to do the above in an inexpensive and streamlined manner.  
+The goals of this project were three fold: 
+- First to allow distributed devices behind NAT and firewalls that I do not control to access each other.
+- Second, to encrypt traffic on potentially malicious or insecure networks.
+- And third, to do the above in an inexpensive and streamlined manner.  
 
-To do this, I am using a small AWS LightSail Ubuntu instance as a relay node.  Devices use the VPN protocol WireGuard to connect up to the publicly accessible instance in AWS which forwards traffic between the different connections as well as the internet. While this may have more lag than a direct peer to peer connection, it has the advantage of working with most NAT implementations and many firewall configurations as well.  
+To do this, I am using a small AWS LightSail Ubuntu instance as a relay node.  Devices use the WireGuard VPN protocol to connect with the publicly accessible AWS instance which forwards traffic between its clients as well as the internet. While this may have more lag than a direct peer to peer connection, it has the advantage of working with most NAT implementations and firewalls. 
 
-I chose WireGuard for its ease of implementation, multi-platform support, peer structure, small overhead, and security.  I have been itching to find a use for the protocol for a while now, so there is that too.
+I chose WireGuard for its ease of implementation, multi-platform support, peer structure, small overhead, and security.  I have been looking for an excuse to to use protocol in a project for a while now, so there is that as well.
 
 This is a setup guide for my Ubuntu AWS Lightsail instance that runs a WireGuard VPN relay.  I also cover connecting devices to it at the end. 
 
-While it can be difficult to find understandable information about the WireGuard configurations online, the man files are excellent recourses and have helpful examples. 
+While it can be difficult to find understandable information about the WireGuard configurations online, the man files are excellent resources and have helpful examples. 
 
 ## Setting up AWS
 After creating an Amazon aws account, go to the lightsail home. 
@@ -340,7 +343,8 @@ The config looks very similar but we are going to add a little more info to it. 
 	# the public ip address of the relay.  wireguard needs to know one side of the connection
 	Endpoint = (relay public ip address):(port number)
 
-	# ip addresses that are routed into the tunnel
+	# ip addresses that are routed into the tunnel.  
+	# You can also just put the subnets you want to allow as well for split tunneling.  I use 10.1.0.0/24 on a few of my clients for various reasons.
 	AllowedIPs = 0.0.0.0/0, ::/0
 
 	# a keep alive signal to keep firewall ports open, in seconds
