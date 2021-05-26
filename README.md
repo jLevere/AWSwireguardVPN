@@ -53,7 +53,7 @@ Now we will try to connect to the aws instance for the first time.  The default 
 I am going to go ahead and update the instance right off the bat. This should only take a few minuets with the blazing fast aws internet.
 ```
 sudo apt-get update
-sudo apt upgrade
+sudo apt-get upgrade
 ```
 
 I am going to reboot just to make sure everything is stable
